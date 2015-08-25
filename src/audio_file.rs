@@ -34,7 +34,10 @@ pub struct AudioFileLoading<'s> {
 
 struct AudioFileShared {
     file_id: FileId,
+
+    #[allow(dead_code)]
     size: usize,
+
     chunk_count: usize,
     cond: Condvar,
     bitmap: Mutex<BitSet>,
