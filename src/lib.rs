@@ -20,6 +20,7 @@ extern crate readall;
 extern crate vorbis;
 extern crate time;
 extern crate tempfile;
+extern crate changecase;
 
 #[macro_use] extern crate log;
 

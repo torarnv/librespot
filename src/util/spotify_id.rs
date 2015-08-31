@@ -3,6 +3,9 @@ use util::u128;
 use byteorder::{BigEndian,ByteOrder};
 use std::ascii::AsciiExt;
 
+use gmp::Mpz;
+use changecase::ChangeCase;
+
 #[derive(Debug,Copy,Clone,PartialEq,Eq,Hash)]
 pub struct SpotifyId(u128);
 
@@ -63,6 +66,11 @@ impl SpotifyId {
         }
 
         std::str::from_utf8(&data).unwrap().to_string()
+    }
+
+    pub fn to_base62(&self) -> String {
+        let base16 = Mpz::from_str_radix(&self.to_base16(), 16).unwrap();
+        return base16.to_str_radix(62).to_invertedcase();
     }
 
     pub fn to_raw(&self) -> [u8; 16] {
