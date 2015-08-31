@@ -15,6 +15,7 @@ pub trait MetadataTrait : Send + Any + 'static {
     type Message: protobuf::MessageStatic;
     fn from_msg(msg: &Self::Message) -> Self;
     fn base_url() -> &'static str;
+    fn base_uri() -> &'static str;
     fn request(r: MetadataRef<Self>) -> MetadataRequest;
 }
 
@@ -42,6 +43,9 @@ impl MetadataTrait for Track {
     }
     fn base_url() -> &'static str {
         "hm://metadata/3/track"
+    }
+    fn base_uri() -> &'static str {
+        "spotify:track"
     }
     fn request(r: MetadataRef<Self>) -> MetadataRequest {
         MetadataRequest::Track(r)
@@ -75,6 +79,9 @@ impl MetadataTrait for Album {
     fn base_url() -> &'static str {
         "hm://metadata/3/album"
     }
+    fn base_uri() -> &'static str {
+        "spotify:album"
+    }
     fn request(r: MetadataRef<Self>) -> MetadataRequest {
         MetadataRequest::Album(r)
     }
@@ -94,6 +101,9 @@ impl MetadataTrait for Artist {
     }
     fn base_url() -> &'static str {
         "hm://metadata/3/artist"
+    }
+    fn base_uri() -> &'static str {
+        "spotify:artist"
     }
     fn request(r: MetadataRef<Self>) -> MetadataRequest {
         MetadataRequest::Artist(r)
@@ -140,6 +150,10 @@ impl <T: MetadataTrait> Metadata<T> {
         let mut handle = self.lock();
         *handle = state;
         self.cond.notify_all();
+    }
+
+    pub fn get_uri(&self) -> String {
+        format!("{}:{}", T::base_uri(), self.id.to_base62())
     }
 }
 
